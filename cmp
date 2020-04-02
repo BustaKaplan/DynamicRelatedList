@@ -1,29 +1,31 @@
-<aura:component controller="FilteredRelatedList" implements="force:appHostable, flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+<aura:component controller="FilteredRelatedList" implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
 	<!--Attributes -->
     <aura:attribute name="relatedRecords" type="Object[]" />
-    <aura:attribute name="relatedRecordsDynamic" type="Object[]" />
-    <aura:attribute name="recordId" type="Task" />
+    <!--<aura:attribute name="relatedRecordsDynamic" type="Object[]" />-->
     <aura:attribute name="compactDisplay" type="boolean" default = "True" />
-    <aura:attribute name="showButton" type="boolean" default = "True" />
+    <aura:attribute name="showButtons" type="boolean"  default = "True"/>
+    <aura:attribute name="fieldLabels" type="String[]" />
+    <aura:attribute name="numRecords" type="Integer" default = "5"/>
     
     <!--Design attributes-->
-    <aura:attribute name="selectedObject" type = "String" default = "Account"/>
     <aura:attribute name="Header" type = "String"/>
-    <aura:attribute name="object" type = "String"/>
+    <aura:attribute name="objectName" type = "String"/>
     <aura:attribute name="field1" type = "String"/>
     <aura:attribute name="field2" type = "String"/>
     <aura:attribute name="field3" type = "String"/>
     <aura:attribute name="field4" type = "String"/>
 	<aura:attribute name="filter" type = "String"/>
-    <!--Handler-->
+    
+    <!--Handler-->   
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <!--DELETE-->
-    <aura:attribute name="greeting" type = "String"/>
     
     <article class="slds-card">
         <!--Header-->
   		<div class="slds-card__header slds-grid">
     		<header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+  					<lightning:icon iconName="standard:filter" alternativeText="Event" title="Event" />
+                </div>
       			<div class="slds-media__body">
         			<h2 class="slds-card__header-title">
           				<div class="slds-card__header-link slds-truncate" title="Headlines">
@@ -33,53 +35,43 @@
       			</div>
     		</header>
   		</div>
-		<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped slds-table_fixed-layout slds-table_resizable-cols">
-  			<thead>
+        <!--Related List-->
+        <table class="slds-table slds-table_cell-buffer slds-table_striped slds-table_fixed-layout slds-table_resizable-cols">
+  			<!--Labels-->
+            <thead>
     			<tr class="slds-line-height_reset"> 
-                    <th scope="col"><span class="slds-truncate">{!v.field1}</span></th>
-                	<th scope="col"><span class="slds-truncate">{!v.field2}</span></th>
-                    <th scope="col"><span class="slds-truncate">{!v.field3}</span></th>
-                    <th scope="col"><span class="slds-truncate">{!v.field4}</span></th>
+                    <th scope="col"><span class="slds-truncate">{!v.fieldLabels[0]}</span></th>
+                	<th scope="col"><span class="slds-truncate">{!v.fieldLabels[1]}</span></th>
+                    <th scope="col"><span class="slds-truncate">{!v.fieldLabels[2]}</span></th>
+                    <th scope="col"><span class="slds-truncate">{!v.fieldLabels[3]}</span></th>
             	</tr> 
     		</thead>
+            <!--Records-->
         	<tbody>
-                <!--Compact View --> 
                 <aura:if isTrue="{!v.compactDisplay}">
             		<aura:iteration items="{!v.relatedRecords}" var="record" indexVar="idx">
-            			<aura:if isTrue="{!lessthan(idx,5)}">
+            			<aura:if isTrue="{!lessthan(idx, v.numRecords)}">
                 			<tr class="slds-line-height_reset slds-has-flexi-truncate">
-                                <td>{!record.field1}</td>
+                                <td class="slds-truncate"><a href="{!'/lightning/r/'+ v.objectName + '/' + record.Id + '/view'}">{!record.field1}</a></td>
                                 <td>{!record.field2}</td>
                                 <td>{!record.field3}</td>
                                 <td>{!record.field4}</td>
-                        		<!--<td class="slds-truncate"><a href="{!'/lightning/r/Task/' + task.Id + '/view'}">{!task.Subject}</a></td>-->                                   
                 			</tr>
                         </aura:if>
             		</aura:iteration>
                 </aura:if>
-                <!--Expanded view-->
-                <aura:if isTrue="{!not(v.compactDisplay)}">
-                	<aura:iteration items="{!v.relatedRecords}" var="record" indexVar="idx">
-            			<tr class="slds-line-height_reset">
-                            <td>{!record.field1}</td>
-                            <td>{!record.field2}</td>
-                            <td>{!record.field3}</td>
-                            <td>{!record.field4}</td>
-                    		<!--<td class="slds-truncate" ><a href="{!'/lightning/r/Task/' + task.Id + '/view'}">{!task.Subject}</a></td>-->                                     
-                		</tr>
-                    </aura:iteration>
-                </aura:if>
         	</tbody>
-            
         </table>
-        <!-- View All Button -->
-        <div class="slds-card__footer">
-        	<aura:if isTrue="{!v.compactDisplay}" >
-       			<lightning:button aura:id= "viewAll" variant="base" label="View All" onclick="{!c.viewAll}" class="slds-align_absolute-center"  /> 
-        	</aura:if>
-        	<aura:if isTrue="{!not(v.compactDisplay)}" >
-       			<lightning:button aura:id= "viewSome" variant="base" label="View Some" onclick="{!c.viewAll}" class="slds-align_absolute-center"  /> 
-        	</aura:if>
-        </div>
+        <!-- Buttons displayed if more than 5 records, toggle between buttons -->
+        <footer class="slds-card__footer">
+            <aura:if isTrue="{!v.showButtons}">
+        		<aura:if isTrue="{!and(v.compactDisplay, v.showButtons) }" >
+       				<lightning:button aura:id= "viewAll" variant="base" label="View All" onclick="{!c.viewAll}" class="slds-align_absolute-center"  /> 
+        		</aura:if>
+        		<aura:if isTrue="{!not(v.compactDisplay)}" >
+       				<lightning:button aura:id= "viewSome" variant="base" label="View Some" onclick="{!c.viewAll}" class="slds-align_absolute-center"  /> 
+        		</aura:if>
+         	</aura:if>
+         </footer>
     </article>
 </aura:component>
