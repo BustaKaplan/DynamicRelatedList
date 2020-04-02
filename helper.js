@@ -1,6 +1,5 @@
 ({
 	constructObjectList : function(component, event, helper, returnValue) {
-        //var returnString = JSON.stringify(returnValue);
         var objectList;
         var field1 = component.get("v.field1");
         var field2 = component.get("v.field2");
@@ -21,7 +20,6 @@
             
             
             for (var j=0; j< fieldList.length; j++){
-        		//var Record = returnValue[i];
                 var FieldName = fieldList[j];
             	var fieldValue;
         	
@@ -59,7 +57,6 @@
          	component.set("v.showButtons",False); 
          }
         var returnedValue = component.get("v.showButtons");
-        console.log('Returned Value: ' + returnedValue);
 	},
     getFieldLabels : function(component, event, helper){
         var field1 = component.get("v.field1");
@@ -70,7 +67,7 @@
         
         var action = component.get("c.getFieldLabels");
         action.setParams({
-        	field1 :field1,
+            field1 :field1,
             field2 :field2,
             field3 :field3,
             field4 :field4,
