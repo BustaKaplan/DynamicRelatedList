@@ -1,4 +1,4 @@
-<design:component label="Hello World">
+<design:component label="Dynamic Related List">
     <design:attribute name="Header" label="Header" />
     <design:attribute name="objectName" label="Object API Name" required = "True" />
     <design:attribute name="field1" label="First Field API Name" required = "True"/>
