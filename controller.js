@@ -6,7 +6,7 @@
         var returnValue;
         
         //Grap parameters for Dynamic Query
-        var object = component.get("v.object");
+        var objectName = component.get("v.objectName");
         var filter = component.get("v.filter");
         var field1 = component.get("v.field1");
         var field2 = component.get("v.field2");
@@ -15,7 +15,7 @@
         var filter = component.get("v.filter");
         
         //Construct query
-        var queryString = "SELECT " + field1 + ", " + field2 + ", " +  field3  + ", " + field4 + " FROM " + object + " WHERE " + filter;
+        var queryString = "SELECT " + field1 + ", " + field2 + ", " +  field3  + ", " + field4 + " FROM " + objectName + " WHERE " + filter;
 
         action.setParams({
         	recordId : recordId,
@@ -34,10 +34,15 @@
                       
         });
         $A.enqueueAction(action);
-        //helper.getFieldLabels(component, event, helper);
+        helper.getFieldLabels(component, event, helper);
     },
     
     viewAll : function(component, event, helper){
-        component.set("v.compactDisplay", !component.get("v.compactDisplay"));
+        //toggle between compact dispay and expanded display
+        if(component.get("v.numRecords") == 5){
+            component.set("v.numRecords", "20")   
+        }else{
+            component.set("v.numRecords", "5")
+        }
     }
 })
