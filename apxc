@@ -3,24 +3,23 @@ public class FilteredRelatedList {
     public static List<Object> getRecords(Id recordId, string queryString) {
         List<Object> recordList = new List<Object>();
         recordList =  Database.query(queryString);
-        system.debug(recordList);
         return recordList;  
    }
-    /*@AuraEnabled
-    public static void getFieldLabels(String field1, String field2, String field3, String field4 ){
-    	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-		Schema.SObjectType ObjectSchema = schemaMap.get('Account');
-		Map<String, Schema.SObjectField> fieldMap = ObjectSchema.getDescribe().fields.getMap();
-
-
-            List<SelectOption> fieldNames = new List<SelectOption>();
-            for (String fieldName: fieldMap.keySet()) 
-            {  
-              fieldNames.add(new SelectOption(fieldName,fieldName));
-
-            }
-        system.debug(fieldNames);
-            //return fieldNames;
+    @AuraEnabled
+    public static List <String> getFieldLabels(String field1, String field2, String field3, String field4, string objectName ){
+		List <String> fieldLabelList = new List<String>();
         
-    }*/
+        //Get a map of all field labels for the entered contact
+        List<Schema.DescribeSObjectResult> describeSobjectsResult = Schema.describeSObjects(new List<String>{objectName}); // this can accept list of strings, we describe only one object here
+		Map<String, Schema.SObjectField> allFields = describeSobjectsResult[0].fields.getMap();
+		System.debug(allFields);
+        //Store the inputted field API names in a list
+		fieldLabelList.add(allFields.get(field1).getDescribe().getLabel());
+        fieldLabelList.add(allFields.get(field2).getDescribe().getLabel());
+        fieldLabelList.add(allFields.get(field3).getDescribe().getLabel());
+        fieldLabelList.add(allFields.get(field4).getDescribe().getLabel());
+        return fieldLabelList;
+		
+        
+    }
 }
