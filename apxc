@@ -1,0 +1,26 @@
+public class FilteredRelatedList {
+   	@AuraEnabled
+    public static List<Object> getRecords(Id recordId, string queryString) {
+        List<Object> recordList = new List<Object>();
+        recordList =  Database.query(queryString);
+        system.debug(recordList);
+        return recordList;  
+   }
+    /*@AuraEnabled
+    public static void getFieldLabels(String field1, String field2, String field3, String field4 ){
+    	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+		Schema.SObjectType ObjectSchema = schemaMap.get('Account');
+		Map<String, Schema.SObjectField> fieldMap = ObjectSchema.getDescribe().fields.getMap();
+
+
+            List<SelectOption> fieldNames = new List<SelectOption>();
+            for (String fieldName: fieldMap.keySet()) 
+            {  
+              fieldNames.add(new SelectOption(fieldName,fieldName));
+
+            }
+        system.debug(fieldNames);
+            //return fieldNames;
+        
+    }*/
+}
