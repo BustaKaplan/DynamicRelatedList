@@ -1,10 +1,9 @@
 <design:component label="Hello World">
-    <design:attribute name="greeting" label="Subject" description="Name of the person you want to greet" />
     <design:attribute name="Header" label="Header" />
-    <design:attribute name="object" label="Object API Name" />
-    <design:attribute name="field1" label="First field" />
-    <design:attribute name="field2" label="Second Field" />
-    <design:attribute name="field3" label="Third Field" />
-    <design:attribute name="field4" label="Fourth Field" />
+    <design:attribute name="objectName" label="Object API Name" required = "True" />
+    <design:attribute name="field1" label="First field API Name" required = "True"/>
+    <design:attribute name="field2" label="Second Field API Name" required = "True"/>
+    <design:attribute name="field3" label="Third Field API Name" required = "True" />
+    <design:attribute name="field4" label="Fourth Field API Name" required = "True" />
     <design:attribute name="filter" label="Filter Criteria ex: Type = 'New'" />
 </design:component>
